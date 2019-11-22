@@ -12,15 +12,51 @@ var firebase = require("firebase/app");
 require("firebase/auth");
 require("firebase/firestore");
 
-app.get('/api/customers', (req, res) => {
-  const customers = [
-    {id: 1, firstName: 'John', lastName: 'Doe'},
-    {id: 2, firstName: 'Brad', lastName: 'Traversy'},
-    {id: 3, firstName: 'Mary', lastName: 'Swanson'},
-  ];
+var firebaseConfig = {
+  apiKey: "AIzaSyAucD4dS2Dj3iCfyMYaeQwppCpZaQYGnLo",
+  authDomain: "mappr-1574369019968.firebaseapp.com",
+  databaseURL: "https://mappr-1574369019968.firebaseio.com",
+  projectId: "mappr-1574369019968",
+  storageBucket: "mappr-1574369019968.appspot.com",
+  messagingSenderId: "604941514326",
+  appId: "1:604941514326:web:e15732396ac1961efd6df7"
+};
 
-  res.json(customers);
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+app.use(express.urlencoded());
+app.use(express.json()); 
+
+app.post('/api/users/login', (req, res) => {
+  console.log(req)
+  //let email = 'me@example.com'
+  //let password = '1234321'
+  //firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    //// Handle Errors here.
+    //var errorCode = error.code;
+    //console.log(errorCode)
+    //var errorMessage = error.message;
+    //console.log(errorMessage)
+    //// ...
+  //});
 });
 
+app.post('/api/users/register', (req, res) => {
+  console.log('A new user tries to register: ', req.body)
+  let email = req.body.email;
+  let password = req.body.password;
+  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    console.log(errorCode)
+    var errorMessage = error.message;
+    console.log(errorMessage)
+    // ...
+    if(errorCode != ''){
+      res.json(errorCode)
+    }
+  });
+});
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
