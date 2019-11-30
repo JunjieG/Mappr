@@ -1,47 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+import './App.css';
+
+import Login from './containers/Login';
+import Logout from './containers/Logout';
+import SignUp from './containers/SignUp';
+import UserProfile from './containers/UserProfile';
+import Header from './components/Header';
 
 function App() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    fetch('/api/users/register' , {
-      method: "POST",
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        'email': email,
-        'password': password
-      })
-    })
-    .then((result) => result.json())
-      .then((info) => {
-        if (info == "auth/invalid-email"){
-          console.log('whyyy?')
-          setErrorMessage('Invalid EMAIL REEEEEEEEEE!!!!');
-        }
-      })
-  }
-
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
-        </label>
-        <label>
-          Password:
-          <input type="password" value={password} 
-            onChange={e => setPassword(e.target.value)}
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-      {errorMessage} 
+      <Header loggedIn={true}/>
+      <Router>
+        <Route exact path='/' component={UserProfile} />
+        <Route exact path='/login' component={Login} />
+        <Route exact path='/signup' component={SignUp} />
+        <Route exact path='/logout' component={Logout} />
+      </Router>
     </div>
   );
 }
