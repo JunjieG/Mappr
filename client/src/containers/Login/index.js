@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import LoginForm from '../../components/LoginForm'
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
+function Login({ loginFunction }) {
   return (
     <div className="Login">
       <h1>Login</h1>
-      <LoginForm state="login"/>
+      <LoginForm state="login" submitFunction={loginFunction} />
     </div>
   );
 }
