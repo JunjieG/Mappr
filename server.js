@@ -2,6 +2,8 @@ const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
 
+const { addUser, removeUser, getUser, getUserInRoom } = require('./users.js')
+
 var app = express();
 
 //const hostname = "127.0.0.1";
@@ -34,6 +36,20 @@ const router = require('./router.js');
 
 io.on('connection', (socket) => {
   console.log('someone has connected');
+
+  socket.on('join', ({ uid, room }, callback) => {
+    const { user } = addUser({ id: socket.id, uid, room });
+    console.log(uid);
+    socket.emit('message', { user: 'server', text: `Welcome ${user.uid} to ${user.room} chatroom`})
+    socket.broadcast.to(user.room).emit('message', { user: 'server', text: `${user.uid} has successfully connected`})
+    socket.join(user.room);
+    callback();
+  })
+
+  socket.on('sendMessage', (message, callback) => {
+    const user = getUser(socket.id);
+    io.to(user.room).emit('message', { user: user.uid, text: message });
+  })
 
   socket.on('disconnect', () => {
     console.log('use has left');

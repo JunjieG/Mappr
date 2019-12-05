@@ -9,18 +9,22 @@ export default function UserProfile({ user }) {
   const [messages, setMessages] = useState([]);
   const ENDPOINT = 'localhost:8080';
 
+  // Connect to socket.io once the ENDPOINT is created (when website opens)
   useEffect(() => {
-    if (user) {
-      socket = io(ENDPOINT);
-
-      socket.emit();
-    }
-
+    socket = io(ENDPOINT);
+    
     return () => {
       socket.emit('disconnect');
       socket.off();
     }
-  }, [ENDPOINT, user])
+  }, [ENDPOINT])
+
+  useEffect(() => {
+    if (user) {
+      socket.emit('join', { uid: user.uid, room: 'New York' }, () => {
+      });
+    }
+  }, [user])
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -28,7 +32,8 @@ export default function UserProfile({ user }) {
     })
   }, [messages])
 
-  const eventHandler = (e) => {
+  // sending messages
+  const sendMessage = (e) => {
     e.preventDefault();
     if (message) {
       socket.emit('sendMessage', message, () => setMessage(''));
@@ -36,8 +41,15 @@ export default function UserProfile({ user }) {
   }
 
   return (
-    <div className="LogOut">
-      <h1>Hello</h1>
+    <div className="UserProfile">
+      <h1>Hello { user && user.uid }</h1>
+      <div className="messageDiv">
+        <input
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' ? sendMessage(e) : null}
+        />
+      </div>
     </div>
   );
 }
