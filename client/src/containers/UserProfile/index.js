@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
+import ChatBox from '../../components/ChatBox'
+
 let socket;
 
 export default function UserProfile({ user }) {
@@ -30,6 +32,7 @@ export default function UserProfile({ user }) {
     socket.on('message', (message) => {
       setMessages([...messages, message]);
     })
+    console.log(messages);
   }, [messages])
 
   // sending messages
@@ -50,6 +53,7 @@ export default function UserProfile({ user }) {
           onKeyPress={(e) => e.key === 'Enter' ? sendMessage(e) : null}
         />
       </div>
+      <ChatBox />
     </div>
   );
 }
