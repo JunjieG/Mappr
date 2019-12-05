@@ -22,6 +22,7 @@ const firebaseConfig = {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState();
 
   useEffect(() => {
     if(!firebase.apps.length) {
@@ -38,6 +39,7 @@ function App() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         setLoggedIn(true);
+        setUser(user);
       } else {
         setLoggedIn(false);
       }
@@ -85,7 +87,7 @@ function App() {
       <Header loggedIn={loggedIn} logoutFunction={logoutFunction}/>
       <Router>
         <Route exact path='/'>
-          { loggedIn? <UserProfile /> : <Redirect to='/login' /> }
+          { loggedIn? <UserProfile user={user} /> : <Redirect to='/login' /> }
         </Route>
         <Route exact path='/login'>
           { loggedIn? <Redirect to='/' /> : <Login loginFunction={loginFunction} /> }

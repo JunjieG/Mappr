@@ -1,31 +1,45 @@
 const express = require('express');
+const socketio = require('socket.io');
+const http = require('http');
+
 var app = express();
 
-const hostname = "127.0.0.1";
+//const hostname = "127.0.0.1";
 const port = process.env.PORT || 8080;
 
-// Firebase App (the core Firebase SDK) is always required and
-// must be listed before other Firebase SDKs
-var firebase = require("firebase/app");
+const server = http.createServer(app);
+const io = socketio(server);
 
-// Add the Firebase products that you want to use
-require("firebase/firestore");
+const router = require('./router.js');
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAucD4dS2Dj3iCfyMYaeQwppCpZaQYGnLo",
-  authDomain: "mappr-1574369019968.firebaseapp.com",
-  databaseURL: "https://mappr-1574369019968.firebaseio.com",
-  projectId: "mappr-1574369019968",
-  storageBucket: "mappr-1574369019968.appspot.com",
-  messagingSenderId: "604941514326",
-  appId: "1:604941514326:web:e15732396ac1961efd6df7"
-};
+//// Firebase App (the core Firebase SDK) is always required and
+//// must be listed before other Firebase SDKs
+//var firebase = require("firebase/app");
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+//// Add the Firebase products that you want to use
+//require("firebase/firestore");
 
-app.use(express.urlencoded());
-app.use(express.json()); 
+//const firebaseConfig = {
+  //apiKey: "AIzaSyAucD4dS2Dj3iCfyMYaeQwppCpZaQYGnLo",
+  //authDomain: "mappr-1574369019968.firebaseapp.com",
+  //databaseURL: "https://mappr-1574369019968.firebaseio.com",
+  //projectId: "mappr-1574369019968",
+  //storageBucket: "mappr-1574369019968.appspot.com",
+  //messagingSenderId: "604941514326",
+  //appId: "1:604941514326:web:e15732396ac1961efd6df7"
+//};
 
+//// Initialize Firebase
+//firebase.initializeApp(firebaseConfig);
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+io.on('connection', (socket) => {
+  console.log('someone has connected');
+
+  socket.on('disconnect', () => {
+    console.log('use has left');
+  })
+})
+
+app.use(router);
+
+server.listen(port, () => console.log(`Server has started on port ${port}`));
