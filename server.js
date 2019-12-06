@@ -2,7 +2,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
 
-const { addUser, removeUser, getUser, getUserInRoom } = require('./users.js')
+const { addUser, removeUser, getUser, getUserUID, getUserInRoom } = require('./users.js')
 
 var app = express();
 
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
   console.log('someone has connected');
 
   socket.on('join', ({ uid, room }, callback) => {
-    const { user } = addUser({ id: socket.id, uid, room });
+    const { user } = addUser({ socket_id: socket.id, uid, room });
     console.log(uid);
     socket.emit('message', { user: 'server', text: `Welcome ${user.uid} to ${user.room} chatroom`})
     socket.broadcast.to(user.room).emit('message', { user: 'server', text: `${user.uid} has successfully connected`})
@@ -49,6 +49,27 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
     io.to(user.room).emit('message', { user: user.uid, text: message });
+  })
+
+  socket.on('privateMessage', (receiverUID, message, callback) => {
+    const sender = getUser(socket.id);
+    const receiver = getUserUID(receiverUID);
+    if (receiver) {
+      io.to(`${receiver.socket_id}`).emit('message', { user: sender.uid, text: message });
+    } else {
+      callback({ error: 'Target person not found' });
+    }
+  })
+
+  socket.on('findContact', (uid, callback) => {
+    uid = uid.trim().toLowerCase();
+    const user = getUserUID(uid);
+    if (user) {
+      callback({ user });
+    } else {
+      callback({ error: 'User not found' });
+    }
+    console.log(user);
   })
 
   socket.on('disconnect', () => {

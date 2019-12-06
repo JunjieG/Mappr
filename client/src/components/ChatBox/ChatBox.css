@@ -10,13 +10,20 @@
 	margin-left:-155px;
 }
 
-#friendslist{
+#friendslist {
+	opacity: 1;
 	position:absolute;
 	top:0;
 	left:0;
 	width:290px;
 	height:484px;
+	transition: opacity 1s;
 }
+
+#friendslist.fade {
+	opacity: 0;
+}
+
 #topmenu{
 	height:69px;
 	width:290px;
@@ -96,13 +103,18 @@
 	 outline: 0;
 }
 #chatview{
+	opacity: 1;
 	width:290px;
 	height:484px;
 	position:absolute;
 	top:0;
 	left:0;	
-	display:none;
+	display: none;
 	background:#fff;
+	transition: opacity 1s;
+}
+#chatview.fade {
+	opacity: 0;
 }
 #profile{
 	height:153px;
@@ -121,7 +133,7 @@
 }
 #profile  p{
 	font-weight:600;
-	font-size:15px;
+	font-size:20px;
 	margin:118px 0 -1px;
 	opacity:0;
 	-webkit-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
@@ -131,7 +143,7 @@
 	        transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);	
 }
 #profile  p.animate{
-	margin-top:97px;
+	margin-top:110px;
 	opacity:1;
 	-webkit-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
 	   -moz-transition: all 200ms cubic-bezier(0.000, 0.995, 0.990, 1.000);
@@ -173,27 +185,16 @@
 	display:block;	
 }
 #chat-messages div.message{
-	padding:0 0 30px 58px;
+	padding:0 0 30px 5px;
 	clear:both;
 	margin-bottom:45px;
 }
 #chat-messages div.message.right{
-	  padding: 0 58px 30px 0;
+	  padding: 0 5px 30px 0;
 	  margin-right: -19px;
 	  margin-left: 19px;
 }
-#chat-messages .message img{
-	  float: left;
-	  margin-left: -38px;
-	  border-radius: 50%;
-	  width: 30px;
-	  margin-top: 12px;
-}
-#chat-messages div.message.right img{
-	float: right;	
-    margin-left: 0;
-	margin-right: -38px;	
-}
+
 .message .bubble{	
 	background:#f0f4f7;
 	font-size:13px;
@@ -205,22 +206,11 @@
 	float:left;
 }
 #chat-messages div.message.right .bubble{
+	background:#bdfdff;
 	float:right;
 	border-radius:5px 5px 0px 5px ;
 }
-.bubble .corner{
-	background:url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/bubble-corner.png") 0 0 no-repeat;
-	position:absolute;
-	width:7px;
-	height:7px;
-	left:-5px;
-	bottom:0;
-}
-div.message.right .corner{
-	background:url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/bubble-cornerR.png") 0 0 no-repeat;
-	left:auto;
-	right:-5px;
-}
+
 .bubble span{
 	  color: #aab8c2;
 	  font-size: 11px;
