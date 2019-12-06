@@ -29,7 +29,7 @@ export default function Contact({
       function frame() {
         width++; // update parameters
         elem.style.width = width + "px"; // show frame
-        if (width == 68)
+        if (width === 68)
           // check finish condition
           clearInterval(id);
       }

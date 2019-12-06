@@ -46,16 +46,6 @@ io.on("connection", socket => {
   socket.on("join", ({ uid, room }, callback) => {
     const { user } = addUser({ socket_id: socket.id, uid, room });
     console.log(uid);
-    socket.emit("message", {
-      user: "server",
-      text: `Welcome ${user.uid} to ${user.room} chatroom`
-    });
-    socket.broadcast
-      .to(user.room)
-      .emit("message", {
-        user: "server",
-        text: `${user.uid} has successfully connected`
-      });
     socket.join(user.room);
     callback();
   });

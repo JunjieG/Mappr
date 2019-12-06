@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import io from "socket.io-client";
 
 import Contact from "./Contact";
+import Message from "./Message";
 
 import "./ChatBox.css";
 
@@ -61,9 +62,9 @@ export default function ChatBox({ user }) {
         if (error) {
           console.log("Private message could not be sent: ", error);
         }
-        setMessage("");
       });
       setMessages([...messages, { user: user.uid, text: message }]);
+      setMessage("");
     }
   };
 
@@ -80,33 +81,6 @@ export default function ChatBox({ user }) {
           console.log(error);
         }
       });
-    }
-  };
-
-  const Message = ({ message }) => {
-    if (message.user.trim().toLowerCase() === currentChatUID) {
-      console.log("user");
-      return (
-        <div className="message">
-          <div className="bubble">
-            {message.text}
-            <span>3 min</span>
-          </div>
-        </div>
-      );
-    } else if (message.user === user.uid) {
-      console.log("self");
-      return (
-        <div className="message right">
-          <div className="bubble">
-            {message.text}
-            <span>3 min</span>
-          </div>
-        </div>
-      );
-    } else {
-      console.log("other people", message.user);
-      return null;
     }
   };
 
@@ -179,7 +153,12 @@ export default function ChatBox({ user }) {
         <div id="chat-messages">
           <label>Thursday 02</label>
           {messages.map((message, i) => (
-            <Message key={i} message={message} />
+            <Message
+              key={i}
+              message={message}
+              currentChatUID={currentChatUID}
+              selfUID={user.uid}
+            />
           ))}
         </div>
 
