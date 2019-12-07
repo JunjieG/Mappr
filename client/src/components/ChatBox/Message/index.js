@@ -1,8 +1,9 @@
 import React from 'react';
 
+import 'firebase/firestore';
 
-export default function Message({ message, currentChatUID, selfUID }) {
-  if (message.user.trim().toLowerCase() === currentChatUID) {
+export default function Message({ message, receiverId, selfId }) {
+  if (message.user.trim().toLowerCase() === receiverId) {
     console.log("user");
     return (
       <div className="message">
@@ -12,7 +13,7 @@ export default function Message({ message, currentChatUID, selfUID }) {
         </div>
       </div>
     );
-  } else if (message.user === selfUID) {
+  } else if (message.user === selfId) {
     console.log("self");
     return (
       <div className="message right">

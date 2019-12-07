@@ -3,13 +3,13 @@ import React from "react";
 export default function Contact({
   contact,
   setCurrentChatName,
-  setCurrentChatUID,
+  setReceiverId,
   references
 }) {
   // Get the uid of the contact for messaging
   console.log("ref", references);
   console.log("contact", contact);
-  let contactUID = contact && contact.uid;
+  let contactId = contact && contact.uid;
 
   const contactClick = e => {
     // Create user profile picture when clicked
@@ -48,7 +48,7 @@ export default function Contact({
       references[1].current.classList.toggle("fade");
     }, 10);
     setCurrentChatName(e.currentTarget.childNodes[1].childNodes[0].innerHTML);
-    setCurrentChatUID(contactUID);
+    setReceiverId(contactId);
     document.querySelector("#profile p").classList.add("animate");
     setTimeout(function() {
       // Display chat messages

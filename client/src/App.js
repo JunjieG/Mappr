@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 import './App.css';
 
@@ -50,10 +51,15 @@ function App() {
     e.preventDefault();
     let email = e.currentTarget.email.value;
     let password = e.currentTarget.passwd.value;
+    let username = e.currentTarget.username.value;
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(function(response) {
       setLoggedIn(true);
+      console.log(response);
+      firebase.firestore().collection('users')
+        .doc(response.user.uid)
+        .set({ email, username, uid: response.user.uid });
     })
     .catch(function(error) {
       console.log('error', error);
