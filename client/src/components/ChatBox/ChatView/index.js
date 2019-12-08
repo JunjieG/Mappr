@@ -29,7 +29,6 @@ export default function ChatView({
   // Decided to not use state to prevent unnecessary
   // rerenders when the user types stuff in
   let currentMessageBox = "";
-  let count = 1;
 
 
   let scrollToBottom = () => {
@@ -71,23 +70,21 @@ export default function ChatView({
           console.log("Error getting chat:", error);
         });
     }
-  }, [firebaseConfig, user, receiverId]);
+  }, [user, receiverId]);
 
   useEffect(() => {
     try {
       socket.on("message", incomingMessage => {
         setMessages([...messages, incomingMessage]);
       });
-      console.log("socket on message calling count", count);
-      count++;
       scrollToBottom();
     } catch {
       console.log("socket not ready");
     }
-  }, [messages]);
+  }, [messages, socket]);
 
-  // sending messages
-  const sendGroupMessage = e => {
+  // sending gorup messages, probably won't do it for the final project
+/*   const sendGroupMessage = e => {
     e.preventDefault();
     if (currentMessageBox) {
       socket.emit(
@@ -96,7 +93,7 @@ export default function ChatView({
         () => (currentMessageBox = "")
       );
     }
-  };
+  }; */
 
   const privateMessage = e => {
     e.preventDefault();

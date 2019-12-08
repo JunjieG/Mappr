@@ -11,19 +11,19 @@ import SignUp from './containers/SignUp';
 import UserProfile from './containers/UserProfile';
 import Header from './components/Header';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAucD4dS2Dj3iCfyMYaeQwppCpZaQYGnLo",
-  authDomain: "mappr-1574369019968.firebaseapp.com",
-  databaseURL: "https://mappr-1574369019968.firebaseio.com",
-  projectId: "mappr-1574369019968",
-  storageBucket: "mappr-1574369019968.appspot.com",
-  messagingSenderId: "604941514326",
-  appId: "1:604941514326:web:e15732396ac1961efd6df7"
-};
-
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState();
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAucD4dS2Dj3iCfyMYaeQwppCpZaQYGnLo",
+    authDomain: "mappr-1574369019968.firebaseapp.com",
+    databaseURL: "https://mappr-1574369019968.firebaseio.com",
+    projectId: "mappr-1574369019968",
+    storageBucket: "mappr-1574369019968.appspot.com",
+    messagingSenderId: "604941514326",
+    appId: "1:604941514326:web:e15732396ac1961efd6df7"
+  };
 
   useEffect(() => {
     if(!firebase.apps.length) {
