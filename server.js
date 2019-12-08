@@ -6,8 +6,9 @@ const {
   addUser,
   removeUser,
   getUser,
-  getUserUID,
-  getUserInRoom
+  getUserByEmail,
+  getUserByUid,
+  getUserInArea
 } = require("./users.js");
 
 var app = express();
@@ -38,53 +39,61 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 let db = firebase.firestore();
 
 io.on("connection", socket => {
-  console.log("someone has connected");
 
-  socket.on("join", ({ uid, room }, callback) => {
-    const { user } = addUser({ socket_id: socket.id, uid, room });
+  socket.on("join", ({ userData, location }, callback) => {
+    const { user } = addUser({ socket_id: socket.id, userData, location });
     socket.join(user.room);
+    console.log(`${userData.username} has joined the room`)
     callback();
   });
 
-  socket.on("sendMessage", (message, callback) => {
+  socket.on("sendGroupMessage", (message, callback) => {
     const user = getUser(socket.id);
     io.to(user.room).emit("message", { user: user.uid, text: message });
   });
 
-  socket.on("privateMessage", (senderId, receiverId, messageText, callback) => {
-    let chatId = 'placeholder';
+  socket.on("privateMessage", (messageText, receiverId, senderId, timeStamp, callback) => {
+    let timeReceived = Date.now()
+    let chatId = '';
     if (senderId < receiverId) {
       chatId = senderId + receiverId;
     } else {
       chatId = receiverId + senderId;
     }
-    const sender = getUser(socket.id);
-    const receiver = getUserUID(receiverId);
+    const receiver = getUserByUid(receiverId);
     if (receiver) {
+      console.log('emiting message to', receiverId);
       io.to(`${receiver.socket_id}`).emit("message", {
-        user: sender.uid,
-        text: messageText
-      });
-      let message = {
         messageText,
-        senderId,
         receiverId,
-        timeStamp: Date.now()
+        senderId,
+        timeStamp
+      });
+      let messageId = timeReceived + senderId;
+      let message = {
+        [messageId]: {
+          messageText,
+          senderId,
+          receiverId,
+          timeStamp: Date.now()
+        }
       }
-      db.collection('messages').doc(chatId).collection('chat').add(message);
-      console.log(db.collection('messages').doc(chatId).collection('chat').add(message));
+      db.collection('messages').doc(chatId).set({message}, {merge: true});
     } else {
       callback({ error: "Target person not found" });
     }
   });
 
-  socket.on("findContact", (uid, callback) => {
-    uid = uid.trim().toLowerCase();
-    const user = getUserUID(uid);
+  socket.on("findContact", (email, callback) => {
+    email = email.trim().toLowerCase();
+    const user = getUserByEmail(email);
     if (user) {
       callback({ user });
     } else {
