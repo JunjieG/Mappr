@@ -1,10 +1,9 @@
 const users = [];
 
-const addUser = ({ socket_id, uid, room }) => {
-  uid = uid.trim().toLowerCase();
-  room = room.trim().toLowerCase();
+const addUser = ({ socket_id, userData, location }) => {
+  location = location.trim().toLowerCase();
   
-  const user = { socket_id, uid, room };
+  const user = { socket_id, userData, location };
   users.push(user);
 
   return { user }
@@ -20,8 +19,10 @@ const removeUser = (socket_id) => {
 
 const getUser = (socket_id) => users.find((user) => user.socket_id === socket_id);
 
-const getUserUID = (uid) => users.find((user) => user.uid === uid);
+const getUserByEmail = (email) => users.find((user) => user.userData.email === email);
 
-const getUserInRoom = (room) => users.filter((user) => user.room === room);
+const getUserByUid = (uid) => users.find((user) => user.userData.uid === uid);
 
-module.exports = { addUser, removeUser, getUser, getUserUID, getUserInRoom };
+const getUserInArea = (location) => users.filter((user) => user.location === location);
+
+module.exports = { addUser, removeUser, getUser, getUserByEmail, getUserByUid, getUserInArea };

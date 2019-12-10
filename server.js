@@ -6,8 +6,9 @@ const {
   addUser,
   removeUser,
   getUser,
-  getUserUID,
-  getUserInRoom
+  getUserByEmail,
+  getUserByUid,
+  getUserInArea
 } = require("./users.js");
 
 var app = express();
@@ -20,63 +21,84 @@ const io = socketio(server);
 
 const router = require("./router.js");
 
-//// Firebase App (the core Firebase SDK) is always required and
-//// must be listed before other Firebase SDKs
-//var firebase = require("firebase/app");
+// Firebase App (the core Firebase SDK) is always required and
+// must be listed before other Firebase SDKs
+var firebase = require("firebase/app");
 
-//// Add the Firebase products that you want to use
-//require("firebase/firestore");
+// Add the Firebase products that you want to use
+require("firebase/firestore");
 
-//const firebaseConfig = {
-//apiKey: "AIzaSyAucD4dS2Dj3iCfyMYaeQwppCpZaQYGnLo",
-//authDomain: "mappr-1574369019968.firebaseapp.com",
-//databaseURL: "https://mappr-1574369019968.firebaseio.com",
-//projectId: "mappr-1574369019968",
-//storageBucket: "mappr-1574369019968.appspot.com",
-//messagingSenderId: "604941514326",
-//appId: "1:604941514326:web:e15732396ac1961efd6df7"
-//};
+const firebaseConfig = {
+  apiKey: "AIzaSyAucD4dS2Dj3iCfyMYaeQwppCpZaQYGnLo",
+  authDomain: "mappr-1574369019968.firebaseapp.com",
+  databaseURL: "https://mappr-1574369019968.firebaseio.com",
+  projectId: "mappr-1574369019968",
+  storageBucket: "mappr-1574369019968.appspot.com",
+  messagingSenderId: "604941514326",
+  appId: "1:604941514326:web:e15732396ac1961efd6df7"
+};
 
-//// Initialize Firebase
-//firebase.initializeApp(firebaseConfig);
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+let db = firebase.firestore();
 
 io.on("connection", socket => {
-  console.log("someone has connected");
 
-  socket.on("join", ({ uid, room }, callback) => {
-    const { user } = addUser({ socket_id: socket.id, uid, room });
-    console.log(uid);
+  socket.on("join", ({ userData, location }, callback) => {
+    const { user } = addUser({ socket_id: socket.id, userData, location });
     socket.join(user.room);
+    console.log(`${userData.username} has joined the room`)
     callback();
   });
 
-  socket.on("sendMessage", (message, callback) => {
+  socket.on("sendGroupMessage", (message, callback) => {
     const user = getUser(socket.id);
     io.to(user.room).emit("message", { user: user.uid, text: message });
   });
 
-  socket.on("privateMessage", (receiverUID, message, callback) => {
-    const sender = getUser(socket.id);
-    const receiver = getUserUID(receiverUID);
+  socket.on("privateMessage", (messageText, receiverId, senderId, timeStamp, callback) => {
+    let timeReceived = Date.now()
+    let chatId = '';
+    if (senderId < receiverId) {
+      chatId = senderId + receiverId;
+    } else {
+      chatId = receiverId + senderId;
+    }
+    const receiver = getUserByUid(receiverId);
     if (receiver) {
+      console.log('emiting message to', receiverId);
       io.to(`${receiver.socket_id}`).emit("message", {
-        user: sender.uid,
-        text: message
+        messageText,
+        receiverId,
+        senderId,
+        timeStamp
       });
+      let messageId = timeReceived + senderId;
+      let message = {
+        [messageId]: {
+          messageText,
+          senderId,
+          receiverId,
+          timeStamp: Date.now()
+        }
+      }
+      db.collection('messages').doc(chatId).set({message}, {merge: true});
     } else {
       callback({ error: "Target person not found" });
     }
   });
 
-  socket.on("findContact", (uid, callback) => {
-    uid = uid.trim().toLowerCase();
-    const user = getUserUID(uid);
+  socket.on("findContact", (email, callback) => {
+    email = email.trim().toLowerCase();
+    const user = getUserByEmail(email);
     if (user) {
       callback({ user });
     } else {
       callback({ error: "User not found" });
     }
-    console.log(user);
   });
 
   socket.on("disconnect", () => {
