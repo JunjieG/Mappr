@@ -24,6 +24,9 @@ if (!firebase.apps.length) {
 
 var db = firebase.firestore();
 
+router.use(express.json());       // to support JSON-encoded bodies
+router.use(express.urlencoded()); // to support URL-encoded bodies
+
 router.get('/', (req, res) => {
   res.send('Server is up and running');
 });
@@ -39,6 +42,31 @@ router.get('/users', (req, res) => {
   }).catch(err => {
     res.send('Error getting User');
   })
+});
+
+router.get('/users/getAllUserGeodata', (req, res) => {
+  let allUserData = []
+  db.collection('users').get().then(snapshot => {
+    snapshot.forEach(doc => {
+      let userData = {
+        email: doc.data().email,
+        geodata: doc.data().geodata,
+      };
+      allUserData.push(userData)
+    });
+    res.send(allUserData);
+  }).catch(err => {
+    res.send('Error getting User');
+  })
+});
+
+router.post('/users/updateUserGeodata', (req, res) => {
+  db.collection('users').doc(req.body.id).set({
+    geodata: {
+      lat: req.body.lat,
+      long: req.body.long
+    }
+  }, {merge: true});
 });
 
 module.exports = router;

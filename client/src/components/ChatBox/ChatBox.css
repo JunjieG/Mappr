@@ -5,9 +5,10 @@
 	overflow:hidden;
 	height:484px;
 	position:absolute;
-	top:100px;
-	left:50%;
+	bottom:0px;
+  right: 10%;
 	margin-left:-155px;
+  position: fixed;
 }
 
 #friendslist {
