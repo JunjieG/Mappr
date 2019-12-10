@@ -1,0 +1,25 @@
+.mapAvatar{
+  z-index: 99;
+  background:url(http://placekitten.com/250);
+  background-size:cover;
+  height:50px;
+  width:50px;
+  border-radius:100%;
+  border:3px solid #DE5B57;
+  position:relative;
+}
+
+.mapAvatar::after{
+  z-index: 99;
+  content:'';
+  position:absolute;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 16px solid #DE5B57;
+  bottom:-16px;
+  left:0;
+  right:0;
+  margin:0 auto;
+}
