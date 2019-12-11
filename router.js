@@ -50,6 +50,7 @@ router.get('/users/getAllUserGeodata', (req, res) => {
     snapshot.forEach(doc => {
       let userData = {
         email: doc.data().email,
+        username: doc.data().username,
         geodata: doc.data().geodata,
       };
       allUserData.push(userData)
