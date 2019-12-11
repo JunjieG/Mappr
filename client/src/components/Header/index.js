@@ -1,16 +1,35 @@
-import React from 'react';
+import React from "react";
 
-import "./index.css";
+import "./Header.css";
 
-export default function Header({ loggedIn, logoutFunction }) {
+export default function Header({ logoutFunction, setLocation, currentUser }) {
   return (
     <div className="App">
       <header>
-        <nav>
-          {loggedIn && <a href="/">Home</a>}
-          {!loggedIn && <a href="/login">Log In</a>}
-          {!loggedIn && <a href="/signup">Sign Up</a>}
-          {loggedIn && <a onClick={ logoutFunction } href="/">Log Out</a>}
+        <nav className="navigationWrapper">
+          <div className="logoWrapper">
+            <img src="/Mappr.svg" alt="logo"></img>
+          </div>
+          <ul className="navigation">
+            <li className="parent">
+              <a className="link" href="#">
+                {currentUser && currentUser.username}
+              </a>
+            </li>
+            <li className="parent" id="divider">
+              |
+            </li>
+            <li className="parent">
+              <a className="link" onClick={setLocation} href="#">
+                Where Am I?
+              </a>
+            </li>
+            <li className="parent">
+              <a className="link" onClick={logoutFunction} href="/">
+                Log Out
+              </a>
+            </li>
+          </ul>
         </nav>
       </header>
     </div>

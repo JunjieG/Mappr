@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import ReactMapGL, { Marker } from "react-map-gl";
+import ReactMapGL, { Marker, GeolocateControl } from "react-map-gl";
 
 import ChatBox from "../../components/ChatBox";
+import mapStyle from "./mapStyle.json";
+import Header from "../../components/Header";
 
 import "./MapBox.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-import mapStyle from "./mapStyle.json";
 
-export default function UserProfile({ user }) {
+export default function UserProfile({ user, logoutFunction }) {
   const [viewport, setViewport] = useState({
     mapStyle: mapStyle,
     width: "100vw",
@@ -81,13 +82,13 @@ export default function UserProfile({ user }) {
     );
   };
 
-  function markerOnlick(email) {
-    alert(email);
-  }
-
   return (
     <div>
-      <button onClick={setLocation}>My location</button>
+      <Header
+        logoutFunction={logoutFunction}
+        setLocation={setLocation}
+        currentUser={user}
+      />
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken="pk.eyJ1Ijoiamc1MzI0IiwiYSI6ImNrM3g5M2Y1bjE0eTEzbHBkdDB4ZmYxeTUifQ.SA9VO1UIf_QooBXKlqM-ZQ"
@@ -107,7 +108,8 @@ export default function UserProfile({ user }) {
           otherUserData.map(
             (content, i) =>
               user &&
-              content.email !== user.email && (
+              content.email !== user.email &&
+              content.geodata && (
                 <Marker
                   latitude={content.geodata.lat}
                   longitude={content.geodata.long}
@@ -122,9 +124,7 @@ export default function UserProfile({ user }) {
                         </header>
 
                         <main>
-                          <p>
-                            Email: {content.email}
-                          </p>
+                          <p>Email: {content.email}</p>
                         </main>
                       </div>
                     </div>

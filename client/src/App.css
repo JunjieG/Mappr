@@ -32,6 +32,6 @@
   -webkit-filter: blur(8px);
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover; 
+  background-size: cover;
   background-image: url("/background_login_register.png");
 }
