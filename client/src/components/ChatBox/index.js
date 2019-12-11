@@ -122,8 +122,8 @@ export default function ChatBox({ user }) {
       <div id="friendslist" ref={fl}>
         <div id="topmenu">
           <span className="friends"></span>
-          <span className="room"></span>
-          <span className="history"></span>
+{/*           <span className="room"></span>
+          <span className="history"></span> maybe a future feature */}
         </div>
 
         <div id="friends">

@@ -5,7 +5,7 @@ import SignUpForm from '../../components/LoginForm'
 function SignUp({ signupFunction }) {
   return (
     <div className="SignUp">
-      <h1>Sign Up</h1>
+      <div className="login-register-background"></div>
       <SignUpForm state="register" submitFunction={signupFunction} />
     </div>
   );

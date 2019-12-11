@@ -5,7 +5,7 @@ import LoginForm from '../../components/LoginForm'
 function Login({ loginFunction }) {
   return (
     <div className="Login">
-      <h1>Login</h1>
+      <div className="login-register-background"></div>
       <LoginForm state="login" submitFunction={loginFunction} />
     </div>
   );

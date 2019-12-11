@@ -20,3 +20,18 @@
 .App-link {
   color: #09d3ac;
 }
+
+.login-register-background {
+  z-index: -10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; 
+  background-image: url("/background_login_register.png");
+}
