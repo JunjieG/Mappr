@@ -194,11 +194,11 @@
   padding: 0 0 30px 5px;
   clear: both;
   margin-bottom: 45px;
+  margin-left: 5px;
 }
 #chat-messages div.message.right {
   padding: 0 5px 30px 0;
-  margin-right: -19px;
-  margin-left: 19px;
+  margin-right: 5px;
 }
 
 .message .bubble {

@@ -29,8 +29,6 @@ export default function ChatView({
   // Decided to not use state to prevent unnecessary
   // rerenders when the user types stuff in
   let currentMessageBox = "";
-  let count = 1;
-
 
   let scrollToBottom = () => {
     bottom.current.scrollIntoView({ behavior: "smooth" });
@@ -77,9 +75,8 @@ export default function ChatView({
     try {
       socket.on("message", incomingMessage => {
         setMessages([...messages, incomingMessage]);
+        console.log('incomingMessage', incomingMessage);
       });
-      console.log("socket on message calling count", count);
-      count++;
       scrollToBottom();
     } catch {
       console.log("socket not ready");
