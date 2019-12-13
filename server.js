@@ -106,6 +106,7 @@ io.on("connection", socket => {
   });
 });
 
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(router);
 
 server.listen(port, () => console.log(`Server has started on port ${port}`));
