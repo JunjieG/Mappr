@@ -27,11 +27,7 @@ var db = firebase.firestore();
 router.use(express.json());       // to support JSON-encoded bodies
 router.use(express.urlencoded()); // to support URL-encoded bodies
 
-router.get('/', (req, res) => {
-  res.send('Server is up and running');
-});
-
-router.get('/users', (req, res) => {
+router.get('/api/users', (req, res) => {
   db.collection('users').doc(req.query.id).get().then(doc => {
     if (!doc.exists) {
       console.log('Something went terribly wrong. User not in database');
@@ -44,7 +40,7 @@ router.get('/users', (req, res) => {
   })
 });
 
-router.get('/users/getAllUserGeodata', (req, res) => {
+router.get('/api/users/getAllUserGeodata', (req, res) => {
   let allUserData = []
   db.collection('users').get().then(snapshot => {
     snapshot.forEach(doc => {
@@ -61,7 +57,7 @@ router.get('/users/getAllUserGeodata', (req, res) => {
   })
 });
 
-router.post('/users/updateUserGeodata', (req, res) => {
+router.post('/api/users/updateUserGeodata', (req, res) => {
   db.collection('users').doc(req.body.id).set({
     geodata: {
       lat: req.body.lat,

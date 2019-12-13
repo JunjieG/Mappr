@@ -42,7 +42,7 @@ function App() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         setLoggedIn(true);
-        fetch(`/users?id=${user.uid}`, {
+        fetch(`/api/users?id=${user.uid}`, {
           method: "GET"
         })
           .then(res => {

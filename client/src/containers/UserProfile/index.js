@@ -25,7 +25,7 @@ export default function UserProfile({ user, logoutFunction }) {
 
   useEffect(() => {
     console.log("stated geting geodata");
-    fetch(`/users/getAllUserGeodata`, {
+    fetch(`/api/users/getAllUserGeodata`, {
       method: "GET"
     })
       .then(result => result.json())
@@ -66,7 +66,7 @@ export default function UserProfile({ user, logoutFunction }) {
           lat: position.coords.latitude,
           long: position.coords.longitude
         };
-        fetch(`/users/updateUserGeodata`, {
+        fetch(`/api/users/updateUserGeodata`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
